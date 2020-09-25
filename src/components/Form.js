@@ -1,36 +1,55 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+
+const API = process.env.REACT_APP_API;
 
 const Form = ({ users, setUsers, inputText, setInputText}) => {
   // Extraer los valores del state
   const {name, email, password} = inputText;
-
+  // console.log(API);
   const handleInputChange = (e) => {
     setInputText({
       ...inputText,
       [e.target.name]:e.target.value
     });
   }
-  
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if(name.trim() ==='' || email.trim() ==='' || password.trim() ===''){
-      return;
-    }
-    setUsers([
-      ...users,
-      {id: Math.random() * 1000, name: name, email : email, password:password}
-    ])
+    const res = await fetch(`${API}/users`,{
+      method:'POST',
+      headers: {
+        'Content-Type':'application/json'
+      },
+      body: JSON.stringify({
+        name,
+        email,
+        password
+      })
+    })
 
+    const data = await res.json();
+    console.log(data);
+    // if(name.trim() ==='' || email.trim() ==='' || password.trim() ===''){
+    //   return;
+    // }
+    // setUsers([
+    //   ...users,
+    //   {id: Math.random() * 1000, name: name, email : email, password:password}
+    // ])
     setInputText({
       name:'',
       email:'',
       password:''
     });
-    // console.log(users);
-
-    // crear el registro
-    // crearUsuario(user);
   }
+  
+  useEffect(() => {
+    const getUsers = async () =>{
+      const res= await fetch(`${API}/users`)
+      const data = await res.json();
+      setUsers(data);
+    }
+    getUsers()
+  },[users])
 
   return ( 
     <form className="card p-3 bg-light" onSubmit={handleSubmit}>

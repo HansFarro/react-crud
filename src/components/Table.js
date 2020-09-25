@@ -1,7 +1,32 @@
 import React from 'react';
 import User from '../components/User';
 
-const Table = ({users}) => {
+const API = process.env.REACT_APP_API;
+
+const Table = ({ users, setInputText }) => {
+  // Eliminar Usuario
+  const deleteUser = async (id) => {
+    const res = await fetch(`${API}/users/${id}`,{
+      method: 'DELETE'
+    });
+
+    const data = await res.json();
+    console.log(data);
+  }
+  
+  //Actualizar Usuario
+  const updateUser = async (id) => {
+    const res = await fetch(`${API}/user/${id}`)
+    const data = await res.json();
+    
+    setInputText({
+      name:data.name,
+      email:data.email,
+      password:data.password
+    })
+    
+  } 
+
   return ( 
     <table className="table table-striped table-light">
       <thead>
@@ -14,7 +39,7 @@ const Table = ({users}) => {
       </thead>
       <tbody>
         {users.map((user) => (
-          <User name={user.name} email={user.email} password={user.password} />
+          <User key={user._id} name={user.name} email={user.email} password={user.password} updateUser={updateUser} deleteUser={deleteUser} id={user._id} />
         ))}
       </tbody>
     </table>

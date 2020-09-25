@@ -11,9 +11,11 @@ const Home = () => {
     email:'',
     password:''
   })
+  const [edit,setEdit]=useState(false);
   
-  const [error, setError] = useState(false);
   // Crear el state error
+  const [error, setError] = useState(false);
+
   return (
     <>
     <Navbar />
@@ -23,7 +25,7 @@ const Home = () => {
           <Form users={users} setUsers={setUsers} error={error} setError={setError} inputText={inputText} setInputText={setInputText}/>
         </div>
         <div className="col-12 col-md-12 col-lg-8 mt-5">
-         <Table users={users} />
+         <Table users={users} setEdit={setEdit} setInputText={setInputText}/>
          {/* <div class="alert alert-secondary text-center">Agrega algunos usuarios</div> */}
         </div>
       </div>
